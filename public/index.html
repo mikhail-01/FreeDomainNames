@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang = "ru-RU">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Проверка доступности доменных имен</title>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid" style="font-size: 0.9rem">
+    <div class="row">
+        <div class="col-12 col-md-11 col-lg-10 col-xl-9" id="content" v-cloak>
+            <b-alert show variant="warning">
+                <h4 class="alert-heading" v-cloak>ВНИМАНИЕ!</h4>
+                Проверка доменных имен через WhoIs и DNS занимает значительное время!
+            </b-alert>
+            <b-alert show variant="primary">
+                <b-form>
+                    <b-form-group label="Список 1:"
+                                  label-for="list1"
+                                  description="Будет обрезан до 50 слов">
+                        <b-form-textarea id="list1"
+                                         placeholder="Введите слова для поиска доменов"
+                                         required
+                                         v-model="form.list1"
+                                         :rows="3">
+                        </b-form-textarea>
+                    </b-form-group>
+                    <b-form-group label="Список 2:"
+                                  label-for="list2"
+                                  description="Будет обрезан до 50 слов">
+                        <b-form-textarea id="list2"
+                                         placeholder="Введите слова для поиска доменов"
+                                         required
+                                         v-model="form.list2"
+                                         :rows="3">
+                        </b-form-textarea>
+                    </b-form-group>
+                    <b-form-checkbox v-model="form.defis"
+                                     plain>
+                        Использовать слияние через дефис
+                    </b-form-checkbox>
+                    <br><br>
+                    <b-form-group label="Способ проверки доменных имен:"
+                                  label-for="method">
+                        <b-form-select id="method"
+                                       :options="methods"
+                                       v-model="form.method">
+                        </b-form-select>
+                    </b-form-group>
+                </b-form>
+                <b-button variant="primary" @click="startCheck" :disabled='isCheckBtnDisabled'>
+                    Проверить (займет время, ждите!)
+                </b-button>
+            </b-alert>
+            <b-alert :variant="resultAlertVariant" :show="!isResHidden">
+                <h6> ${ resHeader } <br></h6>
+
+                <b-progress variant="success" :value="prBarCounter" :max="prBarMax" animated height="5px" :hidden="isProgressBarHidden"></b-progress>
+
+                <b-button variant="success" @click="copyToBuffer" :hidden="isCopyBtnHidden">
+                    Копировать имена в буфер: <b-badge variant="light">${ copyBtnBadge }</b-badge>
+                </b-button>
+
+                <div style="margin-top: 1em">
+            <span  v-for="name in freeNames">
+                ${ name }<br>
+            </span>
+                </div>
+            </b-alert>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+
+<script src="js/spa.js"></script>
+
+</body>
+</html>

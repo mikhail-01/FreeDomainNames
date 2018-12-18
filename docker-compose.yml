@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  php-fpm:
+    image: mrvstas/demo-php-fpm
+    restart: always
+    volumes:
+      - ./:/site
+    links:
+      - db
+
+  nginx:
+    image: mrvstas/demo-nginx
+    restart: always
+    volumes:
+      - ./public:/site/public
+    links:
+      - php-fpm
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+       MYSQL_DATABASE: "${MYSQL_DATABASE}"
+       MYSQL_USER: "${MYSQL_USER}"
+       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+
